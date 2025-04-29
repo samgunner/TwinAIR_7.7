@@ -26,6 +26,13 @@ services:
       - GF_AUTH_GENERIC_OAUTH_TOKEN_URL=https://idm.twinairdmp.online/oauth2/token
       - GF_AUTH_GENERIC_OAUTH_API_URL=https://idm.twinairdmp.online/user
       - GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH=contains(roles[*], 'admin') && 'Admin' || contains(roles[*], 'editor') && 'Editor' || 'Viewer'
+      # putting in an anonymous user to allow access to some dashboard without password.
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_NAME=Public
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
+      # Change the below to Point Grafana at the QuantumLeap Server,
+      # This might have to localhost if running from within the TwinAIR domain.
+      - QUANTUMLEAP_URL=https://quantumleap.twinairdmp.online/v2/
     restart: unless-stopped
     ports:
       - '13000:3000'
@@ -35,5 +42,6 @@ services:
       - ./conf/plugins:/var/lib/grafana/plugins
       - ./conf/ssl:/etc/grafana/ssl
       - ./conf/img:/usr/share/grafana/public/img
+      - ./conf/provisioning/datasources:/etc/grafana/provisioning/datasources
 volumes:
     grafana-storage: {}
